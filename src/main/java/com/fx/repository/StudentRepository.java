@@ -1,8 +1,11 @@
 package com.fx.repository;
 
+import com.fx.entity.Profile;
 import com.fx.entity.Student;
-import lombok.NoArgsConstructor;
+import com.fx.service.TransactionHelper;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,33 +14,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class StudentRepository {
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+    @Autowired
+    private final TransactionHelper transactionHelper;
 
     public Student saveStudent(Student student){
-        try(var session = sessionFactory.openSession()){
-            session.beginTransaction();
+        return transactionHelper.executeTransaction(session -> {
             session.persist(student);
-            session.getTransaction().commit();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-        return student;
+            return student;
+        });
     }
 
-    public boolean deleteStudent(Long id){
-        try(var session = sessionFactory.openSession()){
-            session.beginTransaction();
+    public Profile saveProfile(Profile profile){
+        return transactionHelper.executeTransaction(session -> {
+            session.persist(profile);
+            return profile;
+        });
+    }
+
+    public void deleteStudent(Long id){
+        transactionHelper.executeTransaction(session -> {
             var student = session.find(Student.class, id);
             session.remove(student);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        });
     }
 
     public Optional<Student> getById(Long id){

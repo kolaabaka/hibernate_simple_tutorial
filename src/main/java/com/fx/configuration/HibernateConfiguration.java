@@ -1,6 +1,8 @@
 package com.fx.configuration;
 
 import com.fx.configuration.properties.HibernateConfigurationProperties;
+import com.fx.entity.Group;
+import com.fx.entity.Profile;
 import com.fx.entity.Student;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -20,12 +22,14 @@ public class HibernateConfiguration {
         var config = new Configuration();
         config
             .addAnnotatedClass(Student.class)
+            .addAnnotatedClass(Profile.class)
+            .addAnnotatedClass(Group.class)
             .setProperty("hibernate.connection.driver_class", "org.postgresql.Driver")
             .setProperty("hibernate.connection.url", properties.getUrl())
             .setProperty("hibernate.connection.username", properties.getUserName())
             .setProperty("hibernate.connection.password", properties.getPassword())
             .setProperty("hibernate.show_sql", "true")
-            .setProperty("hibernate.hbm2ddl.auto", "create-drop");
+            .setProperty("hibernate.hbm2ddl.auto", "create-drop"); //should do nothing, better make database by migration
 
         return config.buildSessionFactory();
     }
