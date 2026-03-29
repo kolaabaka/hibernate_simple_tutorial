@@ -1,7 +1,9 @@
 package com.fx;
 
+import com.fx.entity.Course;
 import com.fx.entity.Group;
 import com.fx.entity.Student;
+import com.fx.repository.CourseRepository;
 import com.fx.repository.GroupRepository;
 import com.fx.repository.StudentRepository;
 import org.hibernate.SessionFactory;
@@ -15,6 +17,7 @@ public class HibernateStepik {
 
         var studentRepository= context.getBean(StudentRepository.class);
         var groupRepository= context.getBean(GroupRepository.class);
+        var courseRepository= context.getBean(CourseRepository.class);
 
         var gr1 = groupRepository.saveGroup("1", 2024L);
         var gr2 = groupRepository.saveGroup("2", 2013L);
@@ -27,5 +30,17 @@ public class HibernateStepik {
         studentRepository.saveStudent(st2);
 
         groupRepository.findAll();
+
+        var course1 = new Course("math-1", "math");
+        var course2= new Course("math-2", "math");
+        var course3 = new Course("math-3", "math");
+
+        courseRepository.saveCourse(course1);
+        courseRepository.saveCourse(course2);
+        courseRepository.saveCourse(course3);
+
+        courseRepository.enrollStudentToCourse(2L, 1L);
+
+        var student = studentRepository.getById(2L);
     }
 }

@@ -1,6 +1,7 @@
 package com.fx.configuration;
 
 import com.fx.configuration.properties.HibernateConfigurationProperties;
+import com.fx.entity.Course;
 import com.fx.entity.Group;
 import com.fx.entity.Profile;
 import com.fx.entity.Student;
@@ -21,9 +22,7 @@ public class HibernateConfiguration {
     public SessionFactory sessionFactory(){
         var config = new Configuration();
         config
-            .addAnnotatedClass(Student.class)
-            .addAnnotatedClass(Profile.class)
-            .addAnnotatedClass(Group.class)
+            .addAnnotatedClasses(Student.class, Profile.class, Group.class, Course.class)
             .setProperty("hibernate.connection.driver_class", "org.postgresql.Driver")
             .setProperty("hibernate.connection.url", properties.getUrl())
             .setProperty("hibernate.connection.username", properties.getUserName())

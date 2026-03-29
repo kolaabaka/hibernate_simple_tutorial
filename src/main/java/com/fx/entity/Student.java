@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -36,4 +38,12 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
+
+    @ManyToMany(fetch = FetchType.EAGER)//if got trouble with LazyException need add EAGER in Course
+    @JoinTable(
+        name = "student_courses",
+        joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id")
+    )
+    private List<Course> courseList = new ArrayList<>();
 }
